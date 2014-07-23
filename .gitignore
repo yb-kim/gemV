@@ -1,0 +1,8 @@
+build
+parser.out
+parsetab.py
+*.pyc
+*~
+.*.swp
+m5out
+src/doxygen
