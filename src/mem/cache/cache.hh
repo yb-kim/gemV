@@ -58,6 +58,9 @@
 #include "mem/cache/mshr.hh"
 #include "sim/eventq.hh"
 
+//ybkim
+#include "mem/cache/vul_estimator.hh"
+
 //Forward decleration
 class BasePrefetcher;
 
@@ -184,6 +187,9 @@ class Cache : public BaseCache
      * Notify the prefetcher on every access, not just misses.
      */
     const bool prefetchOnAccess;
+
+    //ybkim
+    Vul_estimator<TagStore> *vul_estimator;
 
     /**
      * @todo this is a temporary workaround until the 4-phase code is committed.

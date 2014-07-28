@@ -43,3 +43,6 @@ DebugFlag('CachePort')
 DebugFlag('CacheRepl')
 DebugFlag('CacheTags')
 DebugFlag('HWPrefetch')
+
+#ybkim
+Source('vul_estimator.cc')

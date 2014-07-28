@@ -84,6 +84,9 @@ Cache<TagStore>::Cache(const Params *p)
     tags->setCache(this);
     if (prefetcher)
         prefetcher->setCache(this);
+
+    //ybkim
+    vul_estimator = new Vul_estimator<TagStore>(blkSize, 1);
 }
 
 template<class TagStore>
