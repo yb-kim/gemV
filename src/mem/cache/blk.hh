@@ -55,6 +55,31 @@
 #include "mem/request.hh"
 #include "sim/core.hh"          // for Tick
 
+/** ybkim
+ * class History
+ * class for tracking block read/write status
+ */
+
+enum Operation {
+    INVALID, READ, WRITE, INCOMING, EVICTION
+};
+
+class History {
+public:
+    Tick t;
+    Operation op;
+    Tick uncertain;
+    Tick blk_v; //vulnerable in block level, but uncertain in word level
+    Tick blk_nv;
+
+    History():
+        t(0), op(INVALID), uncertain(0), blk_v(0), blk_nv(0)
+    {
+        //
+    }
+};
+
+
 /**
  * Cache block status bit assignments
  */
@@ -118,6 +143,9 @@ class CacheBlk
 
     /** holds the source requestor ID for this block. */
     int srcMasterId;
+
+    /** ybkim */
+    History *histories;
 
   protected:
     /**

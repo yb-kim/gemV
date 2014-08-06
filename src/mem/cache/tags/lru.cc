@@ -114,6 +114,9 @@ LRU::LRU(const Params *p)
             blk->size = blkSize;
             sets[i].blks[j]=blk;
             blk->set = i;
+
+            //ybkim
+            blk->histories = new History[blkSize];
         }
     }
 }
