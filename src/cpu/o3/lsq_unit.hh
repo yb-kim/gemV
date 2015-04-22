@@ -62,6 +62,9 @@
 #include "mem/port.hh"
 #include "sim/fault_fwd.hh"
 
+//gem-spm
+#include "debug/Spm.hh"
+
 struct DerivO3CPUParams;
 
 /**
