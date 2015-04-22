@@ -209,6 +209,10 @@ class BaseCPU(MemObject):
     dcache_port = MasterPort("Data Port")
     _cached_ports = ['icache_port', 'dcache_port']
 
+    #ports for SPM
+    ispm_port = MasterPort("Instruction SPM Port")
+    dspm_port = MasterPort("Data SPM port")
+
     if buildEnv['TARGET_ISA'] in ['x86', 'arm']:
         _cached_ports += ["itb.walker.port", "dtb.walker.port"]
 

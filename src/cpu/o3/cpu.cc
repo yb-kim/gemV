@@ -241,6 +241,10 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
       icachePort(&fetch, this),
       dcachePort(&iew.ldstQueue, this),
 
+      //gem-spm
+      ispmPort(this, "ispm-port"),
+      dspmPort(this, "dspm-port"),
+
       timeBuffer(params->backComSize, params->forwardComSize),
       fetchQueue(params->backComSize, params->forwardComSize),
       decodeQueue(params->backComSize, params->forwardComSize),
@@ -1846,6 +1850,22 @@ FullO3CPU<Impl>::updateThreadPriority()
 
         activeThreads.push_back(high_thread);
     }
+}
+
+//gem-spm
+template<class Impl>
+bool
+FullO3CPU<Impl>::SpmPort::recvTimingResp(PacketPtr pkt)
+{
+    //STUB
+    return true;
+}
+
+template<class Impl>
+void
+FullO3CPU<Impl>::SpmPort::recvRetry()
+{
+    //STUB
 }
 
 // Forward declaration of FullO3CPU.

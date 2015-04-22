@@ -325,6 +325,13 @@ BaseCPU::getMasterPort(const string &if_name, PortID idx)
         return getDataPort();
     else if (if_name == "icache_port")
         return getInstPort();
+
+    // gem-spm
+    else if (if_name == "dspm_port")
+        return getDspmPort();
+    else if (if_name == "ispm_port")
+        return getIspmPort();
+
     else
         return MemObject::getMasterPort(if_name, idx);
 }
@@ -611,4 +618,15 @@ BaseCPU::traceFunctionsInternal(Addr pc)
                  curTick() - functionEntryTick, curTick(), sym_str);
         functionEntryTick = curTick();
     }
+}
+
+//gem-spm
+MasterPort&
+BaseCPU::getDspmPort() {
+    fatal("%s does not support spm.", name());
+}
+
+MasterPort&
+BaseCPU::getIspmPort() {
+    fatal("%s does not support spm.", name());
 }

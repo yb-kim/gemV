@@ -194,6 +194,26 @@ class FullO3CPU : public BaseO3CPU
         virtual bool isSnooping() const { return true; }
     };
 
+    //gem-spm
+    /** Spm class for both ispm and dspm. */
+    class SpmPort : public MasterPort
+    {
+    public:
+        /** Constructor must recieve cpu object and component name.
+         * component name can be one of: 
+         * [ispm_port, dspm_port]
+         */
+        SpmPort(FullO3CPU<Impl>* _cpu, const std::string componentName)
+            : MasterPort(_cpu->name() + "." + componentName, _cpu) 
+        {
+            //
+        }
+    protected:
+        virtual bool recvTimingResp(PacketPtr pkt);
+        virtual void recvTimingSnoopReq(PacketPtr pkt) { }
+        virtual void recvRetry();
+    };
+
     class TickEvent : public Event
     {
       private:
@@ -692,6 +712,13 @@ class FullO3CPU : public BaseO3CPU
     /** Data port. Note that it has to appear after the iew stages */
     DcachePort dcachePort;
 
+    //gem-spm
+    /** ispm port. */
+    SpmPort ispmPort;
+
+    /** dspm port. */
+    SpmPort dspmPort;
+
   public:
     /** Enum to give each stage a specific index, so when calling
      *  activateStage() or deactivateStage(), they can specify which stage
@@ -825,6 +852,13 @@ class FullO3CPU : public BaseO3CPU
 
     /** Get the dcache port (used to find block size for translations). */
     virtual MasterPort &getDataPort() { return dcachePort; }
+
+    //gem-spm
+    /** Get dspm port. */
+    virtual MasterPort &getDspmPort() { return dspmPort; }
+
+    /** Get ispm port. */
+    virtual MasterPort &getIspmPort() { return ispmPort; }
 
     /** Stat for total number of times the CPU is descheduled. */
     Stats::Scalar timesIdled;

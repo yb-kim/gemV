@@ -142,6 +142,29 @@ class BaseCPU : public MemObject
      */
     virtual MasterPort &getInstPort() = 0;
 
+
+    //gem-spm
+    /**
+     * Virtual method that returns a reference to the data spm port. 
+     * Subclasses which support spm should implement this method. 
+     * If this method is called on subclasses not supporting spm, 
+     * it calls fatal().
+     *
+     * @return a reference to the data spm port
+     */
+    virtual MasterPort &getDspmPort();
+
+    /**
+     * Virtual method that returns a reference to the instruction 
+     * spm port. Subclasses which support spm should implement 
+     * this method. If this method is called on subclasses not 
+     * supporting spm, it calls fatal().
+     *
+     * @return a reference to the instruction spm port
+     */
+    virtual MasterPort &getIspmPort();
+
+
     /** Reads this CPU's ID. */
     int cpuId() { return _cpuId; }
 

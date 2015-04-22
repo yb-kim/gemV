@@ -63,6 +63,8 @@ import MemConfig
 from Caches import *
 from cpu2000 import *
 
+import SpmConfig
+
 def get_processes(options):
     """Interprets provided options and returns a list of processes"""
 
@@ -253,6 +255,8 @@ else:
     system.system_port = system.membus.slave
     CacheConfig.config_cache(options, system)
     MemConfig.config_mem(options, system)
+    #set SPM
+    SpmConfig.config_spm(options, system)
 
 root = Root(full_system = False, system = system)
 Simulation.run(options, root, system, FutureClass)
