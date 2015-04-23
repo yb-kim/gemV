@@ -6,3 +6,5 @@ parsetab.py
 .*.swp
 m5out
 src/doxygen
+tags
+temp
