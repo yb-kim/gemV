@@ -65,6 +65,9 @@
 #include "mem/request.hh"
 #include "sim/core.hh"
 
+//gem-spm
+#include "mem/spm_helper.hh"
+
 class Packet;
 typedef Packet *PacketPtr;
 typedef uint8_t* PacketDataPtr;
@@ -931,6 +934,11 @@ class Packet : public Printable
      * @return string with the request's type and start<->end addresses
      */
     std::string print() const;
+
+    //gem-spm
+    bool inSpmAddress() {
+        return SpmHelper::inSpmAddress(addr);
+    }
 };
 
 #endif //__MEM_PACKET_HH

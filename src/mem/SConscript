@@ -106,3 +106,4 @@ CompoundFlag('Ruby', [ 'RubyQueue', 'RubyNetwork', 'RubyTester',
 #gem-spm
 SimObject('BaseSpm.py')
 Source('base_spm.cc')
+Source('spm_helper.cc')

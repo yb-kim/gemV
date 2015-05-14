@@ -1174,6 +1174,9 @@ template <class Impl>
 bool
 LSQUnit<Impl>::sendStore(PacketPtr data_pkt)
 {
+    if (data_pkt->inSpmAddress()) {
+        DPRINTF(Spm, "sendStore() meets spm access\n");
+    }
     if (!dcachePort->sendTimingReq(data_pkt)) {
         // Need to handle becoming blocked on a store.
         isStoreBlocked = true;

@@ -67,6 +67,10 @@
 #include "sim/system.hh"
 #include "sim/tlb.hh"
 
+//gem-spm
+#include "debug/Spm.hh"
+#include "mem/spm_helper.hh"
+
 /**
  * @file
  * Defines a dynamic instruction context.
@@ -870,6 +874,13 @@ class BaseDynInst : public RefCounted
     /** Sets the number of consecutive store conditional failures. */
     void setStCondFailures(unsigned sc_failures)
     { thread->storeCondFailures = sc_failures; }
+
+  public:
+    //gem-spm
+    /** Return if the address is in spm range. */
+    bool inSpmAddress(Addr addr) {
+        return SpmHelper::inSpmAddress(addr);
+    }
 };
 
 template<class Impl>
@@ -956,6 +967,17 @@ BaseDynInst<Impl>::writeMem(uint8_t *data, unsigned size,
         // Only split the request if the ISA supports unaligned accesses.
         if (TheISA::HasUnalignedMemAcc) {
             splitRequest(req, sreqLow, sreqHigh);
+        }
+
+        //gem-spm
+        if(inSpmAddress(addr)) {
+            DPRINTF(Spm, "mem address is in spm address range.\n");
+            /*
+            fault = cpu->write(req, sreqLow, sreqHigh, data, sqIdx);
+            Addr pAddr = SpmHelper::translate(addr);
+            req->setPaddr(pAddr);
+            return fault;
+            */
         }
         initiateTranslation(req, sreqLow, sreqHigh, res, BaseTLB::Write);
     }

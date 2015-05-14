@@ -784,6 +784,9 @@ LSQUnit<Impl>::read(Request *req, Request *sreqLow, Request *sreqHigh,
 
     ++usedPorts;
 
+    DPRINTF(Spm, "vaddr of request: %x, paddr of request: %x\n",
+            req->getVaddr(), req->getPaddr());
+
     // if we the cache is not blocked, do cache access
     bool completedFirst = false;
     if (!lsq->cacheBlocked()) {
