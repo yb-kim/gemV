@@ -144,6 +144,10 @@ class DerivO3CPU(BaseCPU):
     needsTSO = Param.Bool(buildEnv['TARGET_ISA'] == 'x86',
                           "Enable TSO Memory model")
 
+    #gem-spm
+    dspmStartAddress = Param.Unsigned(0, "Start address of data spm")
+    dspmEndAddress = Param.Unsigned(0, "End address of data spm")
+
     def addCheckerCpu(self):
         if buildEnv['TARGET_ISA'] in ['arm']:
             from ArmTLB import ArmTLB

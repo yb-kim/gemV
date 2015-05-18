@@ -719,6 +719,12 @@ class FullO3CPU : public BaseO3CPU
     /** dspm port. */
     SpmPort dspmPort;
 
+    /** virtual start address of dspm. */
+    unsigned int dspmStartAddress;
+
+    /** virtual end address of dspm. */
+    unsigned int dspmEndAddress;
+
   public:
     /** Enum to give each stage a specific index, so when calling
      *  activateStage() or deactivateStage(), they can specify which stage
@@ -894,6 +900,7 @@ class FullO3CPU : public BaseO3CPU
     //number of misc
     Stats::Scalar miscRegfileReads;
     Stats::Scalar miscRegfileWrites;
+
 };
 
 #endif // __CPU_O3_CPU_HH__

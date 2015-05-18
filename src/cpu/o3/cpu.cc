@@ -71,6 +71,9 @@
 #include "debug/Activity.hh"
 #endif
 
+//gem-spm
+#include "mem/spm_helper.hh"
+
 struct BaseCPUParams;
 
 using namespace TheISA;
@@ -244,6 +247,8 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
       //gem-spm
       ispmPort(this, "ispm-port"),
       dspmPort(this, "dspm-port"),
+      dspmStartAddress(params->dspmStartAddress),
+      dspmEndAddress(params->dspmEndAddress),
 
       timeBuffer(params->backComSize, params->forwardComSize),
       fetchQueue(params->backComSize, params->forwardComSize),
@@ -463,6 +468,10 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
 
     for (ThreadID tid = 0; tid < this->numThreads; tid++)
         this->thread[tid]->setFuncExeInst(0);
+
+    //gem-spm
+    SpmHelper::setDspmStartAddress(dspmStartAddress);
+    SpmHelper::setDspmEndAddress(dspmEndAddress);
 }
 
 template <class Impl>

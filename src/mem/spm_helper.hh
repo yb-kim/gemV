@@ -23,6 +23,12 @@ class SpmHelper {
 
         /** Translate vaddr to paddr. */
         static Addr translate(Addr vaddr);
+
+        static void setDspmStartAddress(Addr vaddr);
+        static void setDspmEndAddress(Addr vaddr);
+
+        static Addr dspmStartAddress;
+        static Addr dspmEndAddress;
 };
 
 #endif //__SPM_HELPER_HH

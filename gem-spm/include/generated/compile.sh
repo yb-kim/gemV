@@ -1,0 +1,1 @@
+arm-linux-gnueabi-gcc -static -Wl,--section-start=.dspm=100000 $1

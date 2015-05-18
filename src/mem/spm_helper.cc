@@ -3,14 +3,30 @@
  */
 
 #include "mem/spm_helper.hh"
+#include "base/trace.hh"
+#include "debug/Spm.hh"
+
+Addr SpmHelper::dspmStartAddress = 0;
+Addr SpmHelper::dspmEndAddress = 0;
 
 bool SpmHelper::inSpmAddress(Addr addr) {
-    //STUB
-    if(addr == 0x8acc0) return true;
+    if(addr >= SpmHelper::dspmStartAddress &&
+            addr <= SpmHelper::dspmEndAddress) {
+        return true;
+    }
     return false;
 }
 
 Addr SpmHelper::translate(Addr vaddr) {
-    //STUB
-    return 0x80;
+    return vaddr-SpmHelper::dspmStartAddress;
+}
+
+void SpmHelper::setDspmStartAddress(Addr vaddr) {
+    SpmHelper::dspmStartAddress = vaddr;
+    DPRINTF(Spm, "Dspm start address is set: %d\n", vaddr);
+}
+
+void SpmHelper::setDspmEndAddress(Addr vaddr) {
+    SpmHelper::dspmEndAddress = vaddr;
+    DPRINTF(Spm, "Dspm end address is set: %d\n", vaddr);
 }
