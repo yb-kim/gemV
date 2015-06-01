@@ -249,6 +249,7 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
       dspmPort(this, "dspm-port"),
       dspmStartAddress(params->dspmStartAddress),
       dspmEndAddress(params->dspmEndAddress),
+      useSpm(params->useSpm),
 
       timeBuffer(params->backComSize, params->forwardComSize),
       fetchQueue(params->backComSize, params->forwardComSize),
@@ -472,6 +473,7 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
     //gem-spm
     SpmHelper::setDspmStartAddress(dspmStartAddress);
     SpmHelper::setDspmEndAddress(dspmEndAddress);
+    SpmHelper::setSpmSet(useSpm);
 }
 
 template <class Impl>

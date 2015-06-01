@@ -198,6 +198,10 @@ def addCommonOptions(parser):
         help="""Treat value of --checkpoint-restore or --take-checkpoint as a
                 number of instructions.""")
 
+    # Spm options
+    parser.add_option("--use-spms", action="store_true", default=False,
+                       help="Turn on this flag to use spm in simulation.")
+
 def addSEOptions(parser):
     # Benchmark options
     parser.add_option("-c", "--cmd", default="",

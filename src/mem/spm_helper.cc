@@ -8,6 +8,7 @@
 
 Addr SpmHelper::dspmStartAddress = 0;
 Addr SpmHelper::dspmEndAddress = 0;
+bool SpmHelper::spmSet = false;
 
 bool SpmHelper::inSpmAddress(Addr addr) {
     if(addr >= SpmHelper::dspmStartAddress &&
@@ -29,4 +30,13 @@ void SpmHelper::setDspmStartAddress(Addr vaddr) {
 void SpmHelper::setDspmEndAddress(Addr vaddr) {
     SpmHelper::dspmEndAddress = vaddr;
     DPRINTF(Spm, "Dspm end address is set: %d\n", vaddr);
+}
+
+void SpmHelper::setSpmSet(bool use) {
+    SpmHelper::spmSet = use;
+    DPRINTF(Spm, "Spm simulation is turned on\n");
+}
+
+bool SpmHelper::isSpmSet() {
+    return SpmHelper::spmSet;
 }

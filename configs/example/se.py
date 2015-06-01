@@ -256,7 +256,8 @@ else:
     CacheConfig.config_cache(options, system)
     MemConfig.config_mem(options, system)
     #set SPM
-    SpmConfig.config_spm(options, system)
+    if options.use_spms:
+        SpmConfig.config_spm(options, system)
 
 root = Root(full_system = False, system = system)
 Simulation.run(options, root, system, FutureClass)

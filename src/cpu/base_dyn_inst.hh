@@ -970,7 +970,7 @@ BaseDynInst<Impl>::writeMem(uint8_t *data, unsigned size,
         }
 
         //gem-spm
-        if(inSpmAddress(addr)) {
+        if(SpmHelper::isSpmSet() && inSpmAddress(addr)) {
             DPRINTF(Spm, "0x%x: mem address is in spm address range.\n", addr);
             /*
             fault = cpu->write(req, sreqLow, sreqHigh, data, sqIdx);

@@ -13,5 +13,6 @@ def config_spm(options, system):
             setattr(system.cpu[i], spmName+'_port', spm.port)
         system.cpu[i].dspmStartAddress = SpmParameters.GlobalSpmConfig.startAddress
         system.cpu[i].dspmEndAddress = SpmParameters.GlobalSpmConfig.getEndAddress()
+        system.cpu[i].useSpm = True
 
         #spm.port = system.cpu[i].dspm_port

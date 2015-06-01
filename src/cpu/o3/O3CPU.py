@@ -147,6 +147,7 @@ class DerivO3CPU(BaseCPU):
     #gem-spm
     dspmStartAddress = Param.Unsigned(0, "Start address of data spm")
     dspmEndAddress = Param.Unsigned(0, "End address of data spm")
+    useSpm = Param.Bool(False, "True if spm is set")
 
     def addCheckerCpu(self):
         if buildEnv['TARGET_ISA'] in ['arm']:

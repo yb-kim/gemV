@@ -725,6 +725,9 @@ class FullO3CPU : public BaseO3CPU
     /** virtual end address of dspm. */
     unsigned int dspmEndAddress;
 
+    /** Flag represents if spm is set. */
+    bool useSpm;
+
   public:
     /** Enum to give each stage a specific index, so when calling
      *  activateStage() or deactivateStage(), they can specify which stage
