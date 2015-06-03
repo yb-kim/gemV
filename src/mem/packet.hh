@@ -264,6 +264,9 @@ class Packet : public Printable
     /// access failure.
     static const FlagsType SUPPRESS_FUNC_ERROR    = 0x00008000;
 
+    //gem-spm
+    static const FlagsType TO_SPM = 0x00010000;
+
     Flags flags;
 
   public:
@@ -522,6 +525,10 @@ class Packet : public Printable
     bool isSupplyExclusive() const  { return flags.isSet(SUPPLY_EXCLUSIVE); }
     void setSuppressFuncError()     { flags.set(SUPPRESS_FUNC_ERROR); }
     bool suppressFuncError() const  { return flags.isSet(SUPPRESS_FUNC_ERROR); }
+
+    //gem-spm
+    void setToSpm()                 { flags.set(TO_SPM); }
+    bool isToSpm()                  { return flags.isSet(TO_SPM); }
 
     // Network error conditions... encapsulate them as methods since
     // their encoding keeps changing (from result field to command
@@ -937,7 +944,7 @@ class Packet : public Printable
 
     //gem-spm
     bool inSpmAddress() {
-        return SpmHelper::inSpmAddress(addr);
+        return isToSpm();
     }
 };
 

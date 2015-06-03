@@ -64,6 +64,7 @@
 
 //gem-spm
 #include "debug/Spm.hh"
+#include "mem/spm_helper.hh"
 
 struct DerivO3CPUParams;
 
@@ -289,6 +290,10 @@ class LSQUnit {
 
     /** Pointer to the dcache port.  Used only for sending. */
     MasterPort *dcachePort;
+
+    //gem-spm
+    /** Pointer to the dspm port. */
+    MasterPort *dspmPort;
 
     /** Derived class to hold any sender state the LSQ needs. */
     class LSQSenderState : public Packet::SenderState
@@ -790,6 +795,9 @@ LSQUnit<Impl>::read(Request *req, Request *sreqLow, Request *sreqHigh,
         MemCmd command =
             req->isLLSC() ? MemCmd::LoadLockedReq : MemCmd::ReadReq;
         PacketPtr data_pkt = new Packet(req, command);
+        if(SpmHelper::inSpmAddress(req->getVaddr())) {
+            data_pkt->setToSpm();
+        }
         PacketPtr fst_data_pkt = NULL;
         PacketPtr snd_data_pkt = NULL;
 
@@ -822,7 +830,17 @@ LSQUnit<Impl>::read(Request *req, Request *sreqLow, Request *sreqHigh,
             state->mainPkt = data_pkt;
         }
 
-        if (!dcachePort->sendTimingReq(fst_data_pkt)) {
+        //gem-spm
+        bool succeed;
+        if(data_pkt->inSpmAddress()) {
+            DPRINTF(Spm, "load data from spm\n");
+            succeed = dspmPort->sendTimingReq(data_pkt);
+            if(!succeed) DPRINTF(Spm, "load request to dspm failed\n");
+        } else {
+            succeed = dcachePort->sendTimingReq(fst_data_pkt);
+        }
+
+        if (!succeed) {
             // Delete state and data packet because a load retry
             // initiates a pipeline restart; it does not retry.
             delete state;

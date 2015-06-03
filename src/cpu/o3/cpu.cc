@@ -245,8 +245,8 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
       dcachePort(&iew.ldstQueue, this),
 
       //gem-spm
-      ispmPort(this, "ispm-port"),
-      dspmPort(this, "dspm-port"),
+      ispmPort(&iew.ldstQueue, this, "ispm-port"),
+      dspmPort(&iew.ldstQueue, this, "dspm-port"),
       dspmStartAddress(params->dspmStartAddress),
       dspmEndAddress(params->dspmEndAddress),
       useSpm(params->useSpm),
@@ -1868,8 +1868,7 @@ template<class Impl>
 bool
 FullO3CPU<Impl>::SpmPort::recvTimingResp(PacketPtr pkt)
 {
-    //STUB
-    return true;
+    return lsq->recvTimingResp(pkt);
 }
 
 template<class Impl>

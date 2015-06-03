@@ -198,13 +198,16 @@ class FullO3CPU : public BaseO3CPU
     /** Spm class for both ispm and dspm. */
     class SpmPort : public MasterPort
     {
+    protected:
+        LSQ<Impl> *lsq;
+
     public:
         /** Constructor must recieve cpu object and component name.
          * component name can be one of: 
          * [ispm_port, dspm_port]
          */
-        SpmPort(FullO3CPU<Impl>* _cpu, const std::string componentName)
-            : MasterPort(_cpu->name() + "." + componentName, _cpu) 
+        SpmPort(LSQ<Impl> *_lsq, FullO3CPU<Impl>* _cpu, const std::string componentName)
+            : MasterPort(_cpu->name() + "." + componentName, _cpu), lsq(_lsq) 
         {
             //
         }

@@ -905,6 +905,20 @@ BaseDynInst<Impl>::readMem(Addr addr, uint8_t *data,
         if (TheISA::HasUnalignedMemAcc) {
             splitRequest(req, sreqLow, sreqHigh);
         }
+        
+        //gem-spm
+        if(SpmHelper::isSpmSet() && inSpmAddress(addr)) {
+            DPRINTF(Spm, "0x%x: readMem(): mem address is in spm address range.\n", addr);
+            Addr pAddr = SpmHelper::translate(addr);
+            req->setPaddr(pAddr);
+            effAddr = req->getVaddr();
+            effSize = size;
+            instFlags[EffAddrValid] = true;
+            fault = cpu->read(req, sreqLow, sreqHigh, data, lqIdx);
+            if (traceData) traceData->setAddr(addr);
+            return fault;
+        }
+
         initiateTranslation(req, sreqLow, sreqHigh, NULL, BaseTLB::Read);
     }
 
@@ -971,13 +985,14 @@ BaseDynInst<Impl>::writeMem(uint8_t *data, unsigned size,
 
         //gem-spm
         if(SpmHelper::isSpmSet() && inSpmAddress(addr)) {
-            DPRINTF(Spm, "0x%x: mem address is in spm address range.\n", addr);
-            /*
+            DPRINTF(Spm, "0x%x: writeMem(): mem address is in spm address range.\n", addr);
+            effAddr = req->getVaddr();
+            effSize = size;
+            instFlags[EffAddrValid] = true;
             fault = cpu->write(req, sreqLow, sreqHigh, data, sqIdx);
             Addr pAddr = SpmHelper::translate(addr);
             req->setPaddr(pAddr);
             return fault;
-            */
         }
         initiateTranslation(req, sreqLow, sreqHigh, res, BaseTLB::Write);
     }

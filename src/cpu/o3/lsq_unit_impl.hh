@@ -173,6 +173,9 @@ LSQUnit<Impl>::init(O3CPU *cpu_ptr, IEW *iew_ptr, DerivO3CPUParams *params,
     cachePorts = params->cachePorts;
     needsTSO = params->needsTSO;
 
+    //gem-spm
+    dspmPort = &(cpu_ptr->getDspmPort());
+
     resetState();
 }
 
@@ -811,6 +814,9 @@ LSQUnit<Impl>::writebackStores()
 
             // Build a single data packet if the store isn't split.
             data_pkt = new Packet(req, command);
+            if(SpmHelper::inSpmAddress(req->getVaddr())) {
+                data_pkt->setToSpm();
+            }
             data_pkt->dataStatic(inst->memData);
             data_pkt->senderState = state;
         } else {
@@ -1174,10 +1180,15 @@ template <class Impl>
 bool
 LSQUnit<Impl>::sendStore(PacketPtr data_pkt)
 {
+    bool succeed;
     if (data_pkt->inSpmAddress()) {
         DPRINTF(Spm, "sendStore() meets spm access\n");
+        succeed = dspmPort->sendTimingReq(data_pkt);
+        if(!succeed) DPRINTF(Spm, "dspmPort->sendTimingReq returns false.\n");
+    } else {
+        succeed = dcachePort->sendTimingReq(data_pkt);
     }
-    if (!dcachePort->sendTimingReq(data_pkt)) {
+    if (!succeed) {
         // Need to handle becoming blocked on a store.
         isStoreBlocked = true;
         ++lsqCacheBlocked;
