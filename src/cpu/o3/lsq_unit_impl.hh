@@ -1211,7 +1211,16 @@ LSQUnit<Impl>::recvRetry()
         LSQSenderState *state =
             dynamic_cast<LSQSenderState *>(retryPkt->senderState);
 
-        if (dcachePort->sendTimingReq(retryPkt)) {
+        bool succeed;
+        if (retryPkt->inSpmAddress()) {
+            DPRINTF(Spm, "recvRetry() meets spm access\n");
+            succeed = dspmPort->sendTimingReq(retryPkt);
+            if(!succeed) DPRINTF(Spm, "dspmPort->sendTimingReq in recvRetry() returns false.\n");
+        } else {
+            succeed = dcachePort->sendTimingReq(retryPkt);
+        }
+
+        if (succeed) {
             // Don't finish the store unless this is the last packet.
             if (!TheISA::HasUnalignedMemAcc || !state->pktToSend ||
                     state->pendingPacket == retryPkt) {

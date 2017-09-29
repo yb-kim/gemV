@@ -1,0 +1,3 @@
+      0: global: Dspm start address is set: 1048576
+      0: global: Dspm end address is set: 1052671
+      0: global: Spm simulation is turned on

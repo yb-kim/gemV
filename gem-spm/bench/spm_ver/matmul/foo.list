@@ -1,0 +1,350 @@
+ARM GAS  /tmp/ccUWXRo6.s 			page 1
+
+
+   1              		.arch armv5t
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 2
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.file	"matmul.c"
+  13              		.text
+  14              	.Ltext0:
+  15              		.cfi_sections	.debug_frame
+  16              		.global	dspm
+  17              		.section	.dspm,"aw",%progbits
+  18              		.align	2
+  21              	dspm:
+  22 0000 00000000 		.space	4096
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.text
+  24              		.align	2
+  25              		.global	main
+  27              	main:
+  28              	.LFB0:
+  29              		.file 1 "matmul.c"
+   1:matmul.c      **** #include "spm_config.h"
+   2:matmul.c      **** 
+   3:matmul.c      **** #define MATRIX_SIZE 10
+   4:matmul.c      **** 
+   5:matmul.c      **** typedef int array_row_of_int[MATRIX_SIZE];
+   6:matmul.c      **** 
+   7:matmul.c      **** #define DSPM_INT ((array_row_of_int *)dspm)
+   8:matmul.c      **** #define A (DSPM_INT)
+   9:matmul.c      **** #define B (DSPM_INT+MATRIX_SIZE)
+  10:matmul.c      **** #define C (DSPM_INT+(2*MATRIX_SIZE))
+  11:matmul.c      **** 
+  12:matmul.c      **** #define i (*(((int *)dspm)+MATRIX_SIZE*3))
+  13:matmul.c      **** #define j (*(((int *)dspm)+MATRIX_SIZE*3+1))
+  14:matmul.c      **** #define k (*(((int *)dspm)+MATRIX_SIZE*3+2))
+  15:matmul.c      **** 
+  16:matmul.c      **** #ifdef PRINT_OUTPUT
+  17:matmul.c      **** #include <stdio.h>
+  18:matmul.c      **** #endif
+  19:matmul.c      **** 
+  20:matmul.c      **** int main() {
+  30              		.loc 1 20 0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 1, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35 0000 10082DE9 		stmfd	sp!, {r4, fp}
+  36              	.LCFI0:
+ARM GAS  /tmp/ccUWXRo6.s 			page 2
+
+
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 11, -4
+  40 0004 04B08DE2 		add	fp, sp, #4
+  41              	.LCFI1:
+  42              		.cfi_def_cfa 11, 4
+  21:matmul.c      ****     /*
+  22:matmul.c      ****     array_row_of_int *dspm_int = (array_row_of_int *)dspm;
+  23:matmul.c      ****     array_row_of_int *A = dspm_int;
+  24:matmul.c      ****     array_row_of_int *B = &dspm_int[MATRIX_SIZE];
+  25:matmul.c      ****     array_row_of_int *C = &dspm_int[2*MATRIX_SIZE];
+  26:matmul.c      ****     */
+  27:matmul.c      **** 
+  28:matmul.c      ****     //int i, j, k;
+  29:matmul.c      ****     for(i=0; i<MATRIX_SIZE; i++) {
+  43              		.loc 1 29 0
+  44 0008 9C329FE5 		ldr	r3, .L13
+  45 000c 0020A0E3 		mov	r2, #0
+  46 0010 002083E5 		str	r2, [r3, #0]
+  47 0014 410000EA 		b	.L2
+  48              	.L5:
+  30:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+  49              		.loc 1 30 0
+  50 0018 90329FE5 		ldr	r3, .L13+4
+  51 001c 0020A0E3 		mov	r2, #0
+  52 0020 002083E5 		str	r2, [r3, #0]
+  53 0024 350000EA 		b	.L3
+  54              	.L4:
+  31:matmul.c      ****             A[i][j] = i+j;
+  55              		.loc 1 31 0 discriminator 2
+  56 0028 7C329FE5 		ldr	r3, .L13
+  57 002c 003093E5 		ldr	r3, [r3, #0]
+  58 0030 0320A0E1 		mov	r2, r3
+  59 0034 0230A0E1 		mov	r3, r2
+  60 0038 0331A0E1 		mov	r3, r3, asl #2
+  61 003c 023083E0 		add	r3, r3, r2
+  62 0040 8331A0E1 		mov	r3, r3, asl #3
+  63 0044 0320A0E1 		mov	r2, r3
+  64 0048 64329FE5 		ldr	r3, .L13+8
+  65 004c 033082E0 		add	r3, r2, r3
+  66 0050 58229FE5 		ldr	r2, .L13+4
+  67 0054 002092E5 		ldr	r2, [r2, #0]
+  68 0058 4C129FE5 		ldr	r1, .L13
+  69 005c 000091E5 		ldr	r0, [r1, #0]
+  70 0060 48129FE5 		ldr	r1, .L13+4
+  71 0064 001091E5 		ldr	r1, [r1, #0]
+  72 0068 011080E0 		add	r1, r0, r1
+  73 006c 021183E7 		str	r1, [r3, r2, asl #2]
+  32:matmul.c      ****             B[i][j] = i*j;
+  74              		.loc 1 32 0 discriminator 2
+  75 0070 34329FE5 		ldr	r3, .L13
+  76 0074 003093E5 		ldr	r3, [r3, #0]
+  77 0078 0320A0E1 		mov	r2, r3
+  78 007c 0230A0E1 		mov	r3, r2
+  79 0080 0331A0E1 		mov	r3, r3, asl #2
+  80 0084 023083E0 		add	r3, r3, r2
+  81 0088 8331A0E1 		mov	r3, r3, asl #3
+ARM GAS  /tmp/ccUWXRo6.s 			page 3
+
+
+  82 008c 192E83E2 		add	r2, r3, #400
+  83 0090 1C329FE5 		ldr	r3, .L13+8
+  84 0094 033082E0 		add	r3, r2, r3
+  85 0098 10229FE5 		ldr	r2, .L13+4
+  86 009c 002092E5 		ldr	r2, [r2, #0]
+  87 00a0 04129FE5 		ldr	r1, .L13
+  88 00a4 001091E5 		ldr	r1, [r1, #0]
+  89 00a8 00029FE5 		ldr	r0, .L13+4
+  90 00ac 000090E5 		ldr	r0, [r0, #0]
+  91 00b0 900101E0 		mul	r1, r0, r1
+  92 00b4 021183E7 		str	r1, [r3, r2, asl #2]
+  33:matmul.c      ****             C[i][j] = 0;
+  93              		.loc 1 33 0 discriminator 2
+  94 00b8 EC319FE5 		ldr	r3, .L13
+  95 00bc 003093E5 		ldr	r3, [r3, #0]
+  96 00c0 0320A0E1 		mov	r2, r3
+  97 00c4 0230A0E1 		mov	r3, r2
+  98 00c8 0331A0E1 		mov	r3, r3, asl #2
+  99 00cc 023083E0 		add	r3, r3, r2
+ 100 00d0 8331A0E1 		mov	r3, r3, asl #3
+ 101 00d4 322E83E2 		add	r2, r3, #800
+ 102 00d8 D4319FE5 		ldr	r3, .L13+8
+ 103 00dc 033082E0 		add	r3, r2, r3
+ 104 00e0 C8219FE5 		ldr	r2, .L13+4
+ 105 00e4 002092E5 		ldr	r2, [r2, #0]
+ 106 00e8 0010A0E3 		mov	r1, #0
+ 107 00ec 021183E7 		str	r1, [r3, r2, asl #2]
+  30:matmul.c      ****             A[i][j] = i+j;
+ 108              		.loc 1 30 0 discriminator 2
+ 109 00f0 B8319FE5 		ldr	r3, .L13+4
+ 110 00f4 002093E5 		ldr	r2, [r3, #0]
+ 111 00f8 012082E2 		add	r2, r2, #1
+ 112 00fc 002083E5 		str	r2, [r3, #0]
+ 113              	.L3:
+  30:matmul.c      ****             A[i][j] = i+j;
+ 114              		.loc 1 30 0 is_stmt 0 discriminator 1
+ 115 0100 A8319FE5 		ldr	r3, .L13+4
+ 116 0104 003093E5 		ldr	r3, [r3, #0]
+ 117 0108 090053E3 		cmp	r3, #9
+ 118 010c C5FFFFDA 		ble	.L4
+  29:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 119              		.loc 1 29 0 is_stmt 1
+ 120 0110 94319FE5 		ldr	r3, .L13
+ 121 0114 002093E5 		ldr	r2, [r3, #0]
+ 122 0118 012082E2 		add	r2, r2, #1
+ 123 011c 002083E5 		str	r2, [r3, #0]
+ 124              	.L2:
+  29:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 125              		.loc 1 29 0 is_stmt 0 discriminator 1
+ 126 0120 84319FE5 		ldr	r3, .L13
+ 127 0124 003093E5 		ldr	r3, [r3, #0]
+ 128 0128 090053E3 		cmp	r3, #9
+ 129 012c B9FFFFDA 		ble	.L5
+  34:matmul.c      ****         }
+  35:matmul.c      ****     }
+  36:matmul.c      **** 
+  37:matmul.c      ****     for(i=0; i<MATRIX_SIZE; i++) {
+ARM GAS  /tmp/ccUWXRo6.s 			page 4
+
+
+ 130              		.loc 1 37 0 is_stmt 1
+ 131 0130 74319FE5 		ldr	r3, .L13
+ 132 0134 0020A0E3 		mov	r2, #0
+ 133 0138 002083E5 		str	r2, [r3, #0]
+ 134 013c 510000EA 		b	.L6
+ 135              	.L11:
+  38:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 136              		.loc 1 38 0
+ 137 0140 68319FE5 		ldr	r3, .L13+4
+ 138 0144 0020A0E3 		mov	r2, #0
+ 139 0148 002083E5 		str	r2, [r3, #0]
+ 140 014c 450000EA 		b	.L7
+ 141              	.L10:
+  39:matmul.c      ****             for(k=0; k<MATRIX_SIZE; k++) {
+ 142              		.loc 1 39 0
+ 143 0150 60319FE5 		ldr	r3, .L13+12
+ 144 0154 0020A0E3 		mov	r2, #0
+ 145 0158 002083E5 		str	r2, [r3, #0]
+ 146 015c 390000EA 		b	.L8
+ 147              	.L9:
+  40:matmul.c      ****                 C[i][j] += A[i][k] * B[k][j];
+ 148              		.loc 1 40 0 discriminator 2
+ 149 0160 44319FE5 		ldr	r3, .L13
+ 150 0164 003093E5 		ldr	r3, [r3, #0]
+ 151 0168 0320A0E1 		mov	r2, r3
+ 152 016c 0230A0E1 		mov	r3, r2
+ 153 0170 0331A0E1 		mov	r3, r3, asl #2
+ 154 0174 023083E0 		add	r3, r3, r2
+ 155 0178 8331A0E1 		mov	r3, r3, asl #3
+ 156 017c 322E83E2 		add	r2, r3, #800
+ 157 0180 2C319FE5 		ldr	r3, .L13+8
+ 158 0184 031082E0 		add	r1, r2, r3
+ 159 0188 20319FE5 		ldr	r3, .L13+4
+ 160 018c 000093E5 		ldr	r0, [r3, #0]
+ 161 0190 14319FE5 		ldr	r3, .L13
+ 162 0194 003093E5 		ldr	r3, [r3, #0]
+ 163 0198 0320A0E1 		mov	r2, r3
+ 164 019c 0230A0E1 		mov	r3, r2
+ 165 01a0 0331A0E1 		mov	r3, r3, asl #2
+ 166 01a4 023083E0 		add	r3, r3, r2
+ 167 01a8 8331A0E1 		mov	r3, r3, asl #3
+ 168 01ac 322E83E2 		add	r2, r3, #800
+ 169 01b0 FC309FE5 		ldr	r3, .L13+8
+ 170 01b4 033082E0 		add	r3, r2, r3
+ 171 01b8 F0209FE5 		ldr	r2, .L13+4
+ 172 01bc 002092E5 		ldr	r2, [r2, #0]
+ 173 01c0 02C193E7 		ldr	ip, [r3, r2, asl #2]
+ 174 01c4 E0309FE5 		ldr	r3, .L13
+ 175 01c8 003093E5 		ldr	r3, [r3, #0]
+ 176 01cc 0320A0E1 		mov	r2, r3
+ 177 01d0 0230A0E1 		mov	r3, r2
+ 178 01d4 0331A0E1 		mov	r3, r3, asl #2
+ 179 01d8 023083E0 		add	r3, r3, r2
+ 180 01dc 8331A0E1 		mov	r3, r3, asl #3
+ 181 01e0 0320A0E1 		mov	r2, r3
+ 182 01e4 C8309FE5 		ldr	r3, .L13+8
+ 183 01e8 033082E0 		add	r3, r2, r3
+ARM GAS  /tmp/ccUWXRo6.s 			page 5
+
+
+ 184 01ec C4209FE5 		ldr	r2, .L13+12
+ 185 01f0 002092E5 		ldr	r2, [r2, #0]
+ 186 01f4 024193E7 		ldr	r4, [r3, r2, asl #2]
+ 187 01f8 B8309FE5 		ldr	r3, .L13+12
+ 188 01fc 003093E5 		ldr	r3, [r3, #0]
+ 189 0200 0320A0E1 		mov	r2, r3
+ 190 0204 0230A0E1 		mov	r3, r2
+ 191 0208 0331A0E1 		mov	r3, r3, asl #2
+ 192 020c 023083E0 		add	r3, r3, r2
+ 193 0210 8331A0E1 		mov	r3, r3, asl #3
+ 194 0214 192E83E2 		add	r2, r3, #400
+ 195 0218 94309FE5 		ldr	r3, .L13+8
+ 196 021c 033082E0 		add	r3, r2, r3
+ 197 0220 88209FE5 		ldr	r2, .L13+4
+ 198 0224 002092E5 		ldr	r2, [r2, #0]
+ 199 0228 023193E7 		ldr	r3, [r3, r2, asl #2]
+ 200 022c 940303E0 		mul	r3, r4, r3
+ 201 0230 03308CE0 		add	r3, ip, r3
+ 202 0234 003181E7 		str	r3, [r1, r0, asl #2]
+  39:matmul.c      ****             for(k=0; k<MATRIX_SIZE; k++) {
+ 203              		.loc 1 39 0 discriminator 2
+ 204 0238 78309FE5 		ldr	r3, .L13+12
+ 205 023c 002093E5 		ldr	r2, [r3, #0]
+ 206 0240 012082E2 		add	r2, r2, #1
+ 207 0244 002083E5 		str	r2, [r3, #0]
+ 208              	.L8:
+  39:matmul.c      ****             for(k=0; k<MATRIX_SIZE; k++) {
+ 209              		.loc 1 39 0 is_stmt 0 discriminator 1
+ 210 0248 68309FE5 		ldr	r3, .L13+12
+ 211 024c 003093E5 		ldr	r3, [r3, #0]
+ 212 0250 090053E3 		cmp	r3, #9
+ 213 0254 C1FFFFDA 		ble	.L9
+  38:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 214              		.loc 1 38 0 is_stmt 1
+ 215 0258 50309FE5 		ldr	r3, .L13+4
+ 216 025c 002093E5 		ldr	r2, [r3, #0]
+ 217 0260 012082E2 		add	r2, r2, #1
+ 218 0264 002083E5 		str	r2, [r3, #0]
+ 219              	.L7:
+  38:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 220              		.loc 1 38 0 is_stmt 0 discriminator 1
+ 221 0268 40309FE5 		ldr	r3, .L13+4
+ 222 026c 003093E5 		ldr	r3, [r3, #0]
+ 223 0270 090053E3 		cmp	r3, #9
+ 224 0274 B5FFFFDA 		ble	.L10
+  37:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 225              		.loc 1 37 0 is_stmt 1
+ 226 0278 2C309FE5 		ldr	r3, .L13
+ 227 027c 002093E5 		ldr	r2, [r3, #0]
+ 228 0280 012082E2 		add	r2, r2, #1
+ 229 0284 002083E5 		str	r2, [r3, #0]
+ 230              	.L6:
+  37:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+ 231              		.loc 1 37 0 is_stmt 0 discriminator 1
+ 232 0288 1C309FE5 		ldr	r3, .L13
+ 233 028c 003093E5 		ldr	r3, [r3, #0]
+ 234 0290 090053E3 		cmp	r3, #9
+ARM GAS  /tmp/ccUWXRo6.s 			page 6
+
+
+ 235 0294 A9FFFFDA 		ble	.L11
+  41:matmul.c      ****             }
+  42:matmul.c      ****         }
+  43:matmul.c      ****     }
+  44:matmul.c      **** 
+  45:matmul.c      **** #ifdef PRINT_OUTPUT
+  46:matmul.c      ****     for(i=0; i<MATRIX_SIZE; i++) {
+  47:matmul.c      ****         for(j=0; j<MATRIX_SIZE; j++) {
+  48:matmul.c      ****             printf("%d ", C[i][j]);
+  49:matmul.c      ****         }
+  50:matmul.c      ****         printf("\n");
+  51:matmul.c      ****     }
+  52:matmul.c      **** #endif
+  53:matmul.c      **** 
+  54:matmul.c      ****     return 0;
+ 236              		.loc 1 54 0 is_stmt 1
+ 237 0298 0030A0E3 		mov	r3, #0
+  55:matmul.c      **** }
+ 238              		.loc 1 55 0
+ 239 029c 0300A0E1 		mov	r0, r3
+ 240 02a0 04D04BE2 		sub	sp, fp, #4
+ 241 02a4 1008BDE8 		ldmfd	sp!, {r4, fp}
+ 242 02a8 1EFF2FE1 		bx	lr
+ 243              	.L14:
+ 244              		.align	2
+ 245              	.L13:
+ 246 02ac 78000000 		.word	dspm+120
+ 247 02b0 7C000000 		.word	dspm+124
+ 248 02b4 00000000 		.word	dspm
+ 249 02b8 80000000 		.word	dspm+128
+ 250              		.cfi_endproc
+ 251              	.LFE0:
+ 253              	.Letext0:
+ 254              		.file 2 "spm_config.h"
+ARM GAS  /tmp/ccUWXRo6.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 matmul.c
+     /tmp/ccUWXRo6.s:21     .dspm:0000000000000000 dspm
+     /tmp/ccUWXRo6.s:18     .dspm:0000000000000000 $d
+     /tmp/ccUWXRo6.s:24     .text:0000000000000000 $a
+     /tmp/ccUWXRo6.s:27     .text:0000000000000000 main
+     /tmp/ccUWXRo6.s:246    .text:00000000000002ac $d
+                     .debug_frame:0000000000000010 $d
+
+NO UNDEFINED SYMBOLS

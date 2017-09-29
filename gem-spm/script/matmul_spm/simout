@@ -1,0 +1,13 @@
+gem5 Simulator System.  http://gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 compiled Jul 11 2015 15:17:49
+gem5 started Jul 17 2015 12:18:30
+gem5 executing on ybkim-dclab-desktop
+command line: /home/ybkim/workspace/gemV/build/ARM/gem5.debug --outdir=/home/ybkim/workspace/gemV/gem-spm/script/matmul_spm -r --debug-flags=Spm --debug-file=debug.txt /home/ybkim/workspace/gemV/configs/example/se.py -c /home/ybkim/workspace/gemV/gem-spm/bench/spm_ver/matmul/matmul --cpu-type=arm_detailed --caches -n 1 --use-spms
+Global frequency set at 1000000000000 ticks per second
+0: system.remote_gdb.listener: listening for remote gdb #0 on port 7000
+**** REAL SIMULATION ****
+info: Entering event queue @ 0.  Starting simulation...
+info: Increasing stack size by one page.
+Exiting @ tick 53109000 because target called exit()

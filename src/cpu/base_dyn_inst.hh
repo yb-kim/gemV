@@ -989,9 +989,9 @@ BaseDynInst<Impl>::writeMem(uint8_t *data, unsigned size,
             effAddr = req->getVaddr();
             effSize = size;
             instFlags[EffAddrValid] = true;
-            fault = cpu->write(req, sreqLow, sreqHigh, data, sqIdx);
             Addr pAddr = SpmHelper::translate(addr);
             req->setPaddr(pAddr);
+            fault = cpu->write(req, sreqLow, sreqHigh, data, sqIdx);
             return fault;
         }
         initiateTranslation(req, sreqLow, sreqHigh, res, BaseTLB::Write);

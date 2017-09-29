@@ -1875,7 +1875,7 @@ template<class Impl>
 void
 FullO3CPU<Impl>::SpmPort::recvRetry()
 {
-    //STUB
+    lsq->recvRetry();
 }
 
 // Forward declaration of FullO3CPU.
